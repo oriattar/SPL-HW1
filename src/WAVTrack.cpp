@@ -1,0 +1,57 @@
+#include "WAVTrack.h"
+#include <iostream>
+
+WAVTrack::WAVTrack(const std::string& title, const std::vector<std::string>& artists, 
+                   int duration, int bpm, int sample_rate, int bit_depth)
+    : AudioTrack(title, artists, duration, bpm), sample_rate(sample_rate), bit_depth(bit_depth) {
+
+    std::cout << "WAVTrack created: " << sample_rate << "Hz/" << bit_depth << "bit" << std::endl;
+}
+
+// ========== TODO: STUDENTS IMPLEMENT THESE VIRTUAL FUNCTIONS ==========
+
+void WAVTrack::load() {
+    // TODO: Implement realistic WAV loading simulation
+    // NOTE: Use exactly 2 spaces before the arrow (→) character
+
+    std::cout << "  [MP3Track::load] Loading WAV: " << title << " at " << 
+    sample_rate << "Hz/" << bit_depth <<"bit (uncompressed)..." <<std::endl;
+
+    long size = duration_seconds *sample_rate *(bit_depth/8) *2;
+    std::cout << "  → Estimated file size: " << size << " bytes." << std::endl;
+    std::cout <<"  → Fast loading due to uncompressed format." << std::endl;
+
+}
+
+void WAVTrack::analyze_beatgrid() {
+    std::cout << "[WAVTrack::analyze_beatgrid] Analyzing beat grid for: \"" << title << "\"\n";
+
+    double beats = (duration_seconds / 60.0) * bpm;
+    std::cout << "  → Estimated beats: " << beats << "  → Precision factor: 1" << std::endl;
+}
+
+double WAVTrack::get_quality_score() const {
+    double score = 70.0;
+
+    if(sample_rate >= 44100)
+        score+=10;
+    if(sample_rate >=96000)
+        score+=5;
+    if(bit_depth >=16)
+        score+=10;
+    if(bit_depth >=25)
+        score+=5;
+
+    if(score >100)
+        score = 100;
+    return score; 
+}
+
+PointerWrapper<AudioTrack> WAVTrack::clone() const {
+    WAVTrack * copy = new WAVTrack(title,artists,duration_seconds,bpm,sample_rate,bit_depth);
+    for(int i=0;i<this->waveform_size;i++)
+    {
+        copy->waveform_data[i] = this->waveform_data[i];
+    }
+    return PointerWrapper<AudioTrack>(copy); // Replace with your implementation
+}
