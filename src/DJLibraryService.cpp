@@ -13,9 +13,43 @@ DJLibraryService::DJLibraryService(const Playlist& playlist)
  * @brief Load a playlist from track indices referencing the library
  * @param library_tracks Vector of track info from config
  */
+
+ /*
+ The class destructor.
+ Iterates over the library tracks it created and deletes them.
+ */
+DJLibraryService::~DJLibraryService()
+{
+    for(int i =0;i<this->library.size();i++)
+    {
+        delete this->library[i];
+    }
+}
+
+/*
+Method that builds library of tracks, given track info vector parsed from the config.txt file.
+*/
 void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>& library_tracks) {
-    //Todo: Implement buildLibrary method
-    std::cout << "TODO: Implement DJLibraryService::buildLibrary method\n"<< library_tracks.size() << " tracks to be loaded into library.\n";
+    
+    for(int i=0;i<library_tracks.size();i++)
+    {
+        AudioTrack * track;
+        SessionConfig::TrackInfo curr = library_tracks[i]; // takes current track info
+
+        if(library_tracks[i].type == "MP3") //if mp3 track creates an mp3 object otherwise create wav object
+        {
+            track = new MP3Track(curr.type,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
+            std::cout << "MP3: MP3Track created: " << curr.extra_param1 << " kbps" << std::endl;
+        }
+        else
+            track = new WAVTrack(curr.type,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
+            std::cout << "WAV: WAVTrack created: " << curr.extra_param1 <<"Hz/" <<curr.extra_param2 <<"bit" << std::endl;
+
+        this->library.push_back(track);//appending track to lib vector
+
+    }
+
+    std::cout << "Log summary: [INFO] Track library built: "<<this->library.size() << " tracks loaded" << std::endl;
 }
 
 /**
@@ -43,32 +77,63 @@ void DJLibraryService::displayLibrary() const {
  * @return Playlist& 
  */
 Playlist& DJLibraryService::getPlaylist() {
-    // Your implementation here
     return playlist;
 }
 
 /**
- * TODO: Implement findTrack method
- * 
- * HINT: Leverage Playlist's find_track method
+ * Locates a track in the playlist and returns a pointer to it.
+ * not releasing ownership of the track.
  */
 AudioTrack* DJLibraryService::findTrack(const std::string& track_title) {
-    // Your implementation here
-    return nullptr; // Placeholder
+    
+    return this->playlist.find_track(track_title); 
 }
 
 void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name, 
                                                const std::vector<int>& track_indices) {
-    // Your implementation here
-    // For now, add a placeholder to fix the linker error
-    (void)playlist_name;  // Suppress unused parameter warning
-    (void)track_indices;  // Suppress unused parameter warning
+
+    this->playlist = Playlist(playlist_name); // builds a new playlist on the stack
+    std::cout << "Log: [INFO] Loading playlist: " << playlist_name <<std::endl;
+
+    for(int i=0; i < track_indices.size(); i++)
+    {
+        int currIndex = track_indices[i];
+        if(currIndex >0 && currIndex <= this->library.size())//if the index is in library bounds
+        {
+            AudioTrack * track = this->library[currIndex-1]; //selects the track from library
+            AudioTrack * copy = PointerWrapper<AudioTrack>(track).release(); // creates new copy in memo
+            if(copy)
+            {
+                copy->load();
+                copy->analyze_beatgrid(); //simulates data vis
+
+                this->playlist.add_track(copy);
+                std::cout << "Log: Added "<< copy->get_title() <<" to playlist "<< playlist_name << std::endl;
+
+            }
+            else
+            {
+                std::cout << "[ERROR] Failed to clone the track " << currIndex << std::endl;
+            }
+        }
+        else //invalid index
+        {
+            std::cout << "[WARNING] Invalid track index: "<< currIndex << std::endl;
+        }
+    }
 }
 /**
- * TODO: Implement getTrackTitles method
- * @return Vector of track titles in the playlist
+ * Method that collects the titles of the playlist field.
  */
 std::vector<std::string> DJLibraryService::getTrackTitles() const {
-    // Your implementation here
-    return std::vector<std::string>(); // Placeholder
+
+    std::vector<std::string> titles = std::vector<std::string>();
+
+    std::vector<AudioTrack *> tracks = this->playlist.getTracks(); //getting the tracks vector
+
+    for(int i=0;i<tracks.size();i++)
+    {
+        titles.push_back(tracks[i]->get_title());//collecting titles
+    }
+    return titles;
 }

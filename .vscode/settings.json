@@ -105,7 +105,7 @@
     "editor.acceptSuggestionOnEnter": "off",
     "editor.tabCompletion": "off",
     "editor.wordBasedSuggestions": "off",
-    "editor.suggest.showWords": false,
+    "editor.suggest.showWords": true,
     
     // Disable telemetry and online features
     "telemetry.telemetryLevel": "off",
@@ -117,5 +117,6 @@
     "editor.tabSize": 4,
     
     // Terminal settings
-    "terminal.integrated.defaultProfile.linux": "fish"
+    "terminal.integrated.defaultProfile.linux": "fish",
+    "C_Cpp.default.intelliSenseMode": "linux-clang-x64"
 }

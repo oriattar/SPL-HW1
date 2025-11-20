@@ -136,6 +136,7 @@ int Playlist::get_total_duration() const {
 std::vector<AudioTrack*> Playlist::getTracks() const {
     std::vector<AudioTrack*> tracks;
     PlaylistNode* current = head;
+    
     while (current) {
         if (current->track)
             tracks.push_back(current->track);
