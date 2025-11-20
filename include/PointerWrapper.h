@@ -32,7 +32,9 @@ public:
     explicit PointerWrapper(T* p) : ptr(p) {}
 
     /**
-     * TODO: Implement destructor
+     * RAII - ties the allocated data lifetime to an object on the stack
+     * Once out of scope - allocated data gets deleted.
+     * 
      * HINT: What should happen to the wrapped pointer when the wrapper is destroyed?
      * Think about ownership and resource management.
      * Is the default destructor sufficient here?
@@ -58,8 +60,7 @@ public:
     // ========== MOVE OPERATIONS (STUDENTS IMPLEMENT) ==========
 
     /**
-     * TODO: Implement move constructor
-     * HINT: How should ownership transfer from one wrapper to another?
+     * Move copy constructor - ensures no 2 wrappers point to the same address
      * What should happen to the source wrapper after the move?
      */
     PointerWrapper(PointerWrapper&& other) noexcept {
@@ -69,9 +70,8 @@ public:
     }
 
     /**
-     * TODO: Implement move assignment operator
-     * HINT: Handle cleanup of current resource and ownership transfer
-     * Don't forget about self-assignment!
+     * Move = operator for a wrapper object - deletes current memory in pointed address to avoid leaks
+     * also ensures no 2 wrappers point to the same address.
      */
     PointerWrapper& operator=(PointerWrapper&& other) noexcept {
         if (this!=&other){
@@ -85,9 +85,7 @@ public:
     // ========== ACCESS OPERATIONS ==========
 
     /**
-     * TODO: Implement dereference operator
-     * HINT: How do you access the object that the wrapper points to? Is this operation implementation complete?
-     * @throws std::runtime_error if ptr is null
+     * Implements *() operator - to treat the wrapper as a real pointer.
      */
 
     T& operator*() const {
@@ -98,9 +96,7 @@ public:
     };
 
     /**
-     * TODO: Implement arrow operator
-     * HINT: How do you access members of the wrapped object?
-     * What safety checks should you perform?
+     * Implements -> operator - to treat the wrapper as a real pointer.
      */
     T* operator->() const {
         if (this->ptr==nullptr){
@@ -110,10 +106,8 @@ public:
     }
 
     /**
-     * TODO: Implement get() function
-     * HINT: Sometimes you need access to the raw pointer without changing ownership
-     * What should this function return?
-     * @throws std::runtime_error if ptr is null
+     *getter for the pointer wrapper class
+     returns held pointer, if its nullptr throws an exception.
      */
     T* get() const {
         if (this->ptr==nullptr){
@@ -125,20 +119,16 @@ public:
     // ========== OWNERSHIP MANAGEMENT ==========
 
     /**
-     * TODO: Implement release() function
-     * HINT: What does "release" mean in terms of ownership?
-     * Should the wrapper still own the pointer after calling release()?
+     * Method that release ownership of the wrapper on the allocated memory.
      */
     T* release() {
        T* temp = this->ptr;
        this->ptr= nullptr;
-       return temp;
+       return temp; // release ownership, as the object dosnt hold the undeleted address.
     }
 
     /**
-     * TODO: Implement reset() function
-     * HINT: How do you replace the currently wrapped pointer?
-     * What should happen to the old pointer?
+     Reset method for wrapper - delete current memory in pointed adrerss, set held pointer to nullptr.
      */
     void reset(T* new_ptr = nullptr) {
         delete this->ptr;
@@ -148,9 +138,9 @@ public:
     // ========== UTILITY FUNCTIONS ==========
 
     /**
-     * TODO: Implement boolean conversion operator
-     * HINT: When should a wrapper be considered "true" or "false"?
-     * Why might the explicit keyword be important here?
+     * Implemintation for bool casting of a wrapper onbject
+     * acts a real pointer, if held pointer is nullptr, convert to false.
+     * else converts to true.
      */
     explicit operator bool() const {
         return (this->ptr != nullptr);

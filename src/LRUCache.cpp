@@ -15,31 +15,33 @@ AudioTrack* LRUCache::get(const std::string& track_id) {
 }
 
 /**
- * TODO: Implement the put() method for LRUCache
+ * Method that handles putting a track to cahce memory.
  */
 bool LRUCache::put(PointerWrapper<AudioTrack> track) {
-    if(!track) {
+    if(!track) { //track validity check
         return false;
     }
         
-    if(this->get(track->get_title()))
+    if(this->get(track->get_title())) // if the track was found increase the slot access time, increase access counter
         return false;
-       if(this->isFull())
-       {
-            if(this->evictLRU())
-            {
-                size_t index = this->findEmptySlot();
-                this->access_counter++;
-                slots[index].store(track->clone(),this->access_counter);
-                return true;
-            }
-       }
-       else{
-          this->access_counter++;
-         slots[this->findEmptySlot()].store(track->clone(), this->access_counter);
-         return false;
-       }
-       return false;
+
+    this->access_counter++; //increase access counter, as a slot is about to be accessed.
+    if(this->isFull()) //all slots are taken
+    {
+        if(this->evictLRU()) // eveacts the LRU slot
+        {
+            size_t index = this->findEmptySlot();
+            
+            slots[index].store(track->clone(),this->access_counter); // adding a track to an free solts
+            return true; //eviction occured
+        }
+    }
+    else
+    {
+        slots[this->findEmptySlot()].store(track->clone(), this->access_counter);
+        return false;
+    }
+    return false;
 }
 
 bool LRUCache::evictLRU() {
@@ -82,11 +84,11 @@ size_t LRUCache::findSlot(const std::string& track_id) const {
 }
 
 /**
- * TODO: Implement the findLRUSlot() method for LRUCache
+ * Finds the LRU slots, finding the minimal access time in the array
  */
 size_t LRUCache::findLRUSlot() const {
-    size_t minIndex = max_size;
-    uint64_t minValue = 0;
+    size_t minIndex = max_size; //first init
+    uint64_t minValue = 0; //min value is at least 1
     for(int i=0;i<max_size;i++) {
         if(slots[i].isOccupied())
         {

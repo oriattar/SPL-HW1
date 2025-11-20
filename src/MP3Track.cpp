@@ -12,6 +12,9 @@ MP3Track::MP3Track(const std::string& title, const std::vector<std::string>& art
 
 // ========== TODO: STUDENTS IMPLEMENT THESE VIRTUAL FUNCTIONS ==========
 
+/*
+Simulates track loading
+*/
 void MP3Track::load() {
     std::cout << "[MP3Track::load] Loading MP3: \"" << title
               << "\" at " << bitrate << " kbps...\n";
@@ -27,6 +30,9 @@ void MP3Track::load() {
     std::cout << "  → Load complete." << std::endl;
 }
 
+/*
+Simulates track betagrid analysis
+*/
 void MP3Track::analyze_beatgrid() {
      std::cout << "[MP3Track::analyze_beatgrid] Analyzing beat grid for: \"" << title << "\"\n";
    
@@ -36,6 +42,9 @@ void MP3Track::analyze_beatgrid() {
 
 }
 
+/*
+Calculates quality score according to instructions
+*/
 double MP3Track::get_quality_score() const {
    double score =  (bitrate/320.0) * 100.0;
    if(has_id3_tags)
@@ -51,11 +60,15 @@ double MP3Track::get_quality_score() const {
     return score; 
 }
 
+/*
+A virtual clone method that allowes cloning of an MP3Track object
+*/
 PointerWrapper<AudioTrack> MP3Track::clone() const {
-    MP3Track * copy = new MP3Track(title,artists,duration_seconds,bpm,bitrate,has_id3_tags);
+    MP3Track * copy = new MP3Track(title,artists,duration_seconds,bpm,bitrate,has_id3_tags); //constructs the basic fields
+    //also init a data array for the copy
     for(int i=0;i<this->waveform_size;i++)
     {
-        copy->waveform_data[i] = this->waveform_data[i];
+        copy->waveform_data[i] = this->waveform_data[i]; //deep copies the data
     }
-    return PointerWrapper<AudioTrack>(copy); // Replace with your implementation
+    return PointerWrapper<AudioTrack>(copy); // returns the pointer wrapper.
 }

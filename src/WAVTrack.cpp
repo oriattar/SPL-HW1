@@ -10,6 +10,9 @@ WAVTrack::WAVTrack(const std::string& title, const std::vector<std::string>& art
 
 // ========== TODO: STUDENTS IMPLEMENT THESE VIRTUAL FUNCTIONS ==========
 
+/*
+Method that simulates track loading.
+*/
 void WAVTrack::load() {
     // TODO: Implement realistic WAV loading simulation
     // NOTE: Use exactly 2 spaces before the arrow (→) character
@@ -23,6 +26,9 @@ void WAVTrack::load() {
 
 }
 
+/*
+Method that simulates track betagrid analysis
+*/
 void WAVTrack::analyze_beatgrid() {
     std::cout << "[WAVTrack::analyze_beatgrid] Analyzing beat grid for: \"" << title << "\"\n";
 
@@ -30,6 +36,9 @@ void WAVTrack::analyze_beatgrid() {
     std::cout << "  → Estimated beats: " << beats << "  → Precision factor: 1" << std::endl;
 }
 
+/*
+Calculates quality score according to instructions.
+*/
 double WAVTrack::get_quality_score() const {
     double score = 70.0;
 
@@ -47,11 +56,15 @@ double WAVTrack::get_quality_score() const {
     return score; 
 }
 
+/*
+Clone method that allowes cloning of a WAVTrack object.
+*/
 PointerWrapper<AudioTrack> WAVTrack::clone() const {
-    WAVTrack * copy = new WAVTrack(title,artists,duration_seconds,bpm,sample_rate,bit_depth);
+    WAVTrack * copy = new WAVTrack(title,artists,duration_seconds,bpm,sample_rate,bit_depth); //constructs basic object
+    //allocates memory for data array
     for(int i=0;i<this->waveform_size;i++)
     {
-        copy->waveform_data[i] = this->waveform_data[i];
+        copy->waveform_data[i] = this->waveform_data[i]; //deep copies the data
     }
-    return PointerWrapper<AudioTrack>(copy); // Replace with your implementation
+    return PointerWrapper<AudioTrack>(copy);
 }

@@ -8,21 +8,27 @@ Playlist::Playlist(const std::string& name)
 }
 // TODO: Fix memory leaks!
 // Students must fix this in Phase 1
+
+/*
+Destructor for phase 1 - deallocates a playlist object.
+*/
 Playlist::~Playlist() {
     #ifdef DEBUG
     std::cout << "Destroying playlist: " << playlist_name << std::endl;
     #endif
     PlaylistNode* current=this->head;
-    while(current) {
+    while(current) { //going over each track and deleting it
         PlaylistNode* next=current->next;
         delete current;
         current=next;
 
     }
 }
-
+/*
+Method that handles tracks adding to a playlist object.
+*/
 void Playlist::add_track(AudioTrack* track) {
-    if (!track) {
+    if (!track) { // null track, using bool operator of phase 3.
         std::cout << "[Error] Cannot add null track to playlist" << std::endl;
         return;
     }
@@ -39,6 +45,9 @@ void Playlist::add_track(AudioTrack* track) {
               << playlist_name << "'" << std::endl;
 }
 
+/*
+Method that removes a track from playlist, resposnible for deleting extracted node.
+*/
 void Playlist::remove_track(const std::string& title) {
     PlaylistNode* current = head;
     PlaylistNode* prev = nullptr;
@@ -56,7 +65,7 @@ void Playlist::remove_track(const std::string& title) {
         } else {
             head = current->next;
         }
-        delete current;
+        delete current; // deleting the node we removed
 
         track_count--;
         std::cout << "Removed '" << title << "' from playlist" << std::endl;
