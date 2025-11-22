@@ -101,7 +101,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
         if(currIndex >0 && currIndex <= this->library.size())//if the index is in library bounds
         {
             AudioTrack * track = this->library[currIndex-1]; //selects the track from library
-            AudioTrack * copy = PointerWrapper<AudioTrack>(track).release(); // creates new copy in memo
+            AudioTrack * copy = track->clone().release(); // creates new copy in memo
             if(copy)
             {
                 copy->load();

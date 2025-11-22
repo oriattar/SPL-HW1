@@ -64,7 +64,25 @@ bool DJSession::load_playlist(const std::string& playlist_name)  {
  */
 int DJSession::load_track_to_controller(const std::string& track_name) {
     // Your implementation here
-    return 0; // Placeholder
+    AudioTrack* track=this->library_service.findTrack(track_name);
+    if(!track) {
+         std::cout << "[ERROR] Track " << track_name << " not found in library " << std::endl;
+         this->stats.errors++;
+         return 0;
+    }
+    std::cout << "[System] Loading track " << track_name << " to controller... " << std::endl;
+    int res=this->controller_service.loadTrackToCache(*track);
+    if(res==1)
+        this->stats.cache_hits++;
+    else if(res==0)
+        this->stats.cache_misses++;
+    else if(res==-1){
+        this->stats.cache_misses++;
+        this->stats.cache_evictions++;
+    }
+    else
+        this->stats.errors++;
+    return res;
 }
 
 /**
@@ -76,7 +94,23 @@ int DJSession::load_track_to_controller(const std::string& track_name) {
 bool DJSession::load_track_to_mixer_deck(const std::string& track_title) {
     std::cout << "[System] Delegating track transfer to MixingEngineService for: " << track_title << std::endl;
     // your implementation here
-    return false; // Placeholder
+    AudioTrack* track=this->controller_service.getTrackFromCache(track_title);
+    if(!track) {
+        std::cout << "[ERROR] Track " << track_title << " not found in cache " << std::endl;
+        this->stats.errors++;
+        return false;
+    }
+   int res=this->mixing_service.loadTrackToDeck(*track);
+   if(res==0)
+        this->stats.deck_loads_a++;
+    else if(res==1) 
+        this->stats.deck_loads_b++;
+    else{
+         std::cout << "[ERROR] could not load " << track_title << " to the decks " << std::endl;
+        this->stats.errors++;
+        return false;
+    }
+    return true;
 }
 
 /**
@@ -109,6 +143,26 @@ void DJSession::simulate_dj_performance() {
 
     std::cout << "TODO: Implement the DJ performance simulation workflow here." << std::endl;
     // Your implementation here
+    if(this->play_all) {
+       std::map<std::string,std::vector<int>> playlists=this->session_config.playlists;
+       std::vector<std::string> names;
+       for(const auto& pair:playlists) {
+        names.push_back(pair.first);
+       }
+       std::sort(names.begin(),names.end());
+       for(int i=0;i<names.size();i++) {
+        this->library_service.loadPlaylistFromIndices(names[i],playlists[names[i]]);
+       }
+       
+    }
+    else{
+         std::string name;
+        do{
+            name=this->display_playlist_menu_from_config();
+    }
+        while(name!="");
+    }
+
 }
 
 
