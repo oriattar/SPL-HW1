@@ -93,6 +93,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
                                                const std::vector<int>& track_indices) {
 
     this->playlist = Playlist(playlist_name); // builds a new playlist on the stack
+    int count_track=0;
     std::cout << "Log: [INFO] Loading playlist: " << playlist_name <<std::endl;
 
     for(int i=0; i < track_indices.size(); i++)
@@ -106,7 +107,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
             {
                 copy->load();
                 copy->analyze_beatgrid(); //simulates data vis
-
+                count_track++;
                 this->playlist.add_track(copy);
                 std::cout << "Log: Added "<< copy->get_title() <<" to playlist "<< playlist_name << std::endl;
 
@@ -121,6 +122,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
             std::cout << "[WARNING] Invalid track index: "<< currIndex << std::endl;
         }
     }
+     std::cout << "Log summary: [INFO] Playlist loaded: "<< playlist_name << " (" << count_track << "  tracks) " << std::endl;
 }
 /**
  * Method that collects the titles of the playlist field.

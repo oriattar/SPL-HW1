@@ -95,7 +95,7 @@ public:
      */
     void simulate_dj_performance();
 
-
+    void process_selected_playlist(const std::string& playlist_name);
     // ========== STATUS & DISPLAY METHODS ==========
 
     const std::string& get_session_name() const { return session_name; }

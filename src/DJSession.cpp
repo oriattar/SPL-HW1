@@ -101,12 +101,16 @@ bool DJSession::load_track_to_mixer_deck(const std::string& track_title) {
         return false;
     }
    int res=this->mixing_service.loadTrackToDeck(*track);
-   if(res==0)
+   if(res==0) {
         this->stats.deck_loads_a++;
-    else if(res==1) 
+        this->stats.transitions++;
+    }
+    else if(res==1) {
         this->stats.deck_loads_b++;
+        this->stats.transitions++;
+    }
     else{
-         std::cout << "[ERROR] could not load " << track_title << " to the decks " << std::endl;
+        std::cout << "[ERROR] could not load " << track_title << " to the decks " << std::endl;
         this->stats.errors++;
         return false;
     }
@@ -147,24 +151,47 @@ void DJSession::simulate_dj_performance() {
        std::map<std::string,std::vector<int>> playlists=this->session_config.playlists;
        std::vector<std::string> names;
        for(const auto& pair:playlists) {
-        names.push_back(pair.first);
+            names.push_back(pair.first);
        }
        std::sort(names.begin(),names.end());
-       for(int i=0;i<names.size();i++) {
-        this->library_service.loadPlaylistFromIndices(names[i],playlists[names[i]]);
-       }
-       
+        for(int i=0;i<names.size();i++) 
+             this->process_selected_playlist(names[i]); 
     }
     else{
          std::string name;
         do{
             name=this->display_playlist_menu_from_config();
+            if(name!= "")
+                this->process_selected_playlist(name); 
+        }while(name!= "");       
     }
-        while(name!="");
-    }
-
+    std::cout << "Log: Session cancelled by user or all playlists played." << std::endl;
 }
-
+/*
+Helper method that process selected playlist
+*/
+void DJSession::process_selected_playlist(const std::string& playlist_name) {
+            if(!this->load_playlist(playlist_name)) {
+                std::cout<< "[ERROR] Failed to load playlist " << std::endl;
+                return;
+            }
+            std::vector<std::string> track_titles=this->library_service.getTrackTitles();
+            for(int i=0; i<track_titles.size(); i++) {
+                 std::cout << " Log: \n-- Processing: "<< track_titles[i] << " -- " << std::endl;
+                 this->stats.tracks_processed++;
+                 if(this->load_track_to_controller(track_titles[i]))
+                    continue;  
+            }
+            this->print_session_summary();
+            this->stats.cache_evictions=0;
+            this->stats.cache_hits=0;
+            this->stats.cache_misses=0;
+            this->stats.deck_loads_a=0;
+            this->stats.deck_loads_b=0;
+            this->stats.errors=0;
+            this->stats.tracks_processed=0;
+            this->stats.transitions=0;
+}
 
 /* 
  * Helper method to load session configuration from file
