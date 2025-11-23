@@ -179,8 +179,7 @@ void DJSession::process_selected_playlist(const std::string& playlist_name) {
             for(int i=0; i<track_titles.size(); i++) {
                  std::cout << " Log: \n-- Processing: "<< track_titles[i] << " -- " << std::endl;
                  this->stats.tracks_processed++;
-                 if(this->load_track_to_controller(track_titles[i]))
-                    continue;  
+                 this->load_track_to_controller(track_titles[i]);
             }
             this->print_session_summary();
             this->stats.cache_evictions=0;

@@ -96,8 +96,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
     int count_track=0;
     std::cout << "Log: [INFO] Loading playlist: " << playlist_name <<std::endl;
 
-    for(int i=0; i < track_indices.size(); i++)
-    {
+    for(int i=0; i < track_indices.size(); i++){
         int currIndex = track_indices[i];
         if(currIndex >0 && currIndex <= this->library.size())//if the index is in library bounds
         {
