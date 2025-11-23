@@ -59,6 +59,11 @@ public:
      */
     void display() const;
 
+    /*
+    Helper method that clears a playlist object.
+    */
+    void Clear();
+
     /**
      * Get playlist statistics
      * @return Number of tracks in the playlist

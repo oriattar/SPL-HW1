@@ -38,7 +38,7 @@ void MP3Track::analyze_beatgrid() {
    
     double beats = (duration_seconds / 60.0) * bpm;
     double precision_factor = bitrate /320.0;
-    std::cout << "  → Estimated beats: " << beats << "  → Compression precision factor: " << precision_factor << std::endl;
+    std::cout << "  → Estimated beats: " << (int)(beats) << "  → Compression precision factor: " << precision_factor << std::endl;
 
 }
 
@@ -46,16 +46,20 @@ void MP3Track::analyze_beatgrid() {
 Calculates quality score according to instructions
 */
 double MP3Track::get_quality_score() const {
-   double score =  (bitrate/320.0) * 100.0;
-   if(has_id3_tags)
+    
+    double score =  (bitrate/320.0) * 100.0;
+    if(has_id3_tags)
         score+=5;
-   if(bitrate<128)
+    if(bitrate<128)
         score-=10;
     
     if(score > 100)
         score =100;
     else if(score < 0)
         score = 0;
+
+    std::cout << "[MP3Track::get_quality_score] \"" << title << " score = " << (int)(score) <<
+    "/100" << std::endl;
 
     return score; 
 }
@@ -64,11 +68,6 @@ double MP3Track::get_quality_score() const {
 A virtual clone method that allowes cloning of an MP3Track object
 */
 PointerWrapper<AudioTrack> MP3Track::clone() const {
-    MP3Track * copy = new MP3Track(title,artists,duration_seconds,bpm,bitrate,has_id3_tags); //constructs the basic fields
-    //also init a data array for the copy
-    for(int i=0;i<this->waveform_size;i++)
-    {
-        copy->waveform_data[i] = this->waveform_data[i]; //deep copies the data
-    }
+    AudioTrack * copy = new MP3Track(*this); //constructs the basic fields, also calls base class copy constructor
     return PointerWrapper<AudioTrack>(copy); // returns the pointer wrapper.
 }

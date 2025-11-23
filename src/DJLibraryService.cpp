@@ -24,6 +24,8 @@ DJLibraryService::~DJLibraryService()
     {
         delete this->library[i];
     }
+
+    this->playlist.Clear();
 }
 
 /*
@@ -91,8 +93,12 @@ AudioTrack* DJLibraryService::findTrack(const std::string& track_title) {
 
 void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name, 
                                                const std::vector<int>& track_indices) {
+    
+    if(!this->playlist.is_empty())
+        this->playlist.Clear(); // cleaning prevoiusly allocated tracks
 
-    this->playlist = Playlist(playlist_name); // builds a new playlist on the stack
+    this->playlist = Playlist(playlist_name);
+
     int count_track=0;
     std::cout << "Log: [INFO] Loading playlist: " << playlist_name <<std::endl;
 

@@ -13,15 +13,24 @@ Playlist::Playlist(const std::string& name)
 Destructor for phase 1 - deallocates a playlist object.
 */
 Playlist::~Playlist() {
+    
     #ifdef DEBUG
     std::cout << "Destroying playlist: " << playlist_name << std::endl;
     #endif
+
+    this->Clear(); //empties the playlist
+}
+
+/*
+Helper method that clears all the nodes in the playlist.
+*/
+void Playlist::Clear()
+{
     PlaylistNode* current=this->head;
     while(current) { //going over each track and deleting it
         PlaylistNode* next=current->next;
         delete current;
         current=next;
-
     }
 }
 /*

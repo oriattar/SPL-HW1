@@ -18,6 +18,7 @@ AudioTrack::AudioTrack(const std::string& title, const std::vector<std::string>&
     for (size_t i = 0; i < waveform_size; ++i) {
         waveform_data[i] = dis(gen);
     }
+
     #ifdef DEBUG
     std::cout << "AudioTrack created: " << title << " by " << std::endl;
     for (const auto& artist : artists) {
@@ -49,13 +50,14 @@ AudioTrack::AudioTrack(const AudioTrack& other)
     #ifdef DEBUG
     std::cout << "AudioTrack copy constructor called for: " << other.title << std::endl;
     #endif
-   this->copyfrom(other); //helper methods that copy premitive fields.
-   
-   this->waveform_data=new double[other.waveform_size]; //allocates data array for the copy
 
-   for(int i=0;i<other.waveform_size;i++) {
+    this->copyfrom(other); //helper methods that copy premitive fields.
+   
+    this->waveform_data=new double[other.waveform_size]; //allocates data array for the copy
+
+    for(int i=0;i<other.waveform_size;i++) {
         this->waveform_data[i]=other.waveform_data[i]; //deep copies the data
-   }
+    }
 }
 
 /*
@@ -79,6 +81,7 @@ AudioTrack& AudioTrack::operator=(const AudioTrack& other) {
     #ifdef DEBUG
     std::cout << "AudioTrack copy assignment called for: " << other.title << std::endl;
     #endif
+
     if(this!=&other){ //checks for self assignment
 
         delete[] this->waveform_data; //deletes this data, to deep copy from other
@@ -97,10 +100,11 @@ AudioTrack& AudioTrack::operator=(const AudioTrack& other) {
 The move copy constructor - from optimizing rvalues usage.
 */
 AudioTrack::AudioTrack(AudioTrack&& other) noexcept {
-    // TODO: Implement the move constructor
+    
     #ifdef DEBUG
     std::cout << "AudioTrack move constructor called for: " << other.title << std::endl;
     #endif
+
     this->copyfrom(other);
     this->waveform_data=other.waveform_data; //just coppies other's data array, as he is going to be deleted
     other.waveform_data=nullptr;//avoids other's data deletion.
@@ -114,6 +118,7 @@ AudioTrack& AudioTrack::operator=(AudioTrack&& other) noexcept {
     #ifdef DEBUG
     std::cout << "AudioTrack move assignment called for: " << other.title << std::endl;
     #endif
+    
      if(this!=&other){ //handles self assignments
         delete[] this->waveform_data;
         this->copyfrom(other);
