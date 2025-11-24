@@ -184,7 +184,7 @@ template<typename T>
 void swap(PointerWrapper<T>& lhs, PointerWrapper<T>& rhs) noexcept {
     // TODO: Implement global swap function
     // HINT: You can use the member swap function
-    //your code here...
+    lhs.swap(rhs);
 }
 
 #endif // POINTERWRAPPER_H
