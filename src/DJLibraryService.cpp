@@ -24,8 +24,6 @@ DJLibraryService::~DJLibraryService()
     {
         delete this->library[i];
     }
-
-    this->playlist.Clear();
 }
 
 /*
@@ -40,11 +38,11 @@ void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>&
 
         if(library_tracks[i].type == "MP3") //if mp3 track creates an mp3 object otherwise create wav object
         {
-            track = new MP3Track(curr.type,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
+            track = new MP3Track(curr.title,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
             std::cout << "MP3: MP3Track created: " << curr.extra_param1 << " kbps" << std::endl;
         }
         else
-            track = new WAVTrack(curr.type,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
+            track = new WAVTrack(curr.title,curr.artists,curr.duration_seconds,curr.bpm,curr.extra_param1,curr.extra_param2);
             std::cout << "WAV: WAVTrack created: " << curr.extra_param1 <<"Hz/" <<curr.extra_param2 <<"bit" << std::endl;
 
         this->library.push_back(track);//appending track to lib vector

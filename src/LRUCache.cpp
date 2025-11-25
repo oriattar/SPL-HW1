@@ -22,8 +22,11 @@ bool LRUCache::put(PointerWrapper<AudioTrack> track) {
         return false;
     }
         
-    if(this->get(track->get_title())) // if the track was found increase the slot access time, increase access counter
+    if(this->get(track->get_title()))
+    { // if the track was found increase the slot access time, increase access counter
+        this->access_counter++;
         return false;
+    }
 
     this->access_counter++; //increase access counter, as a slot is about to be accessed.
     if(this->isFull()) //all slots are taken
@@ -32,13 +35,13 @@ bool LRUCache::put(PointerWrapper<AudioTrack> track) {
         {
             size_t index = this->findEmptySlot();
             
-            slots[index].store(track->clone(),this->access_counter); // adding a track to an free solts
+            slots[index].store(std::move(track),this->access_counter); // adding a track to an free solts
             return true; //eviction occured
         }
     }
     else
     {
-        slots[this->findEmptySlot()].store(track->clone(), this->access_counter);
+        slots[this->findEmptySlot()].store(std::move(track), this->access_counter);
         return false;
     }
     return false;

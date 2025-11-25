@@ -46,19 +46,24 @@ MixingEngineService::~MixingEngineService() {
 int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     
     std::cout << "\n=== Loading Track to Deck ===" << std:: endl;
+
+    PointerWrapper<AudioTrack> copy = track.clone();
+        if (!copy){
+        std::cout << "[ERROR] Track: "<< track.get_title() << " failed to clone" << std:: endl;
+            return ERROR_CLONE;
+    }
     
-    if (decks[0] == nullptr && decks[1]== nullptr){ //in initial state
-        *(decks[0]) = track;
-         this->active_deck=0;
+    if (decks[FIRST_DECK] == nullptr && decks[SECOND_DECK]== nullptr){ //in initial state
+
+        copy->load();
+        copy->analyze_beatgrid();
+
+        decks[FIRST_DECK] = copy.release();
+        this->active_deck=0;
 
          std::cout << "[Load Complete] "<< track.get_title() <<" is now loaded on deck " << 0 << std::endl;
     }
      else {
-        PointerWrapper<AudioTrack> copy = track.clone();
-        if (!copy){
-        std::cout << "[ERROR] Track: "<< track.get_title() << " failed to clone" << std:: endl;
-            return ERROR_CLONE;
-        }
 
     int target = 1- this->active_deck; //calculates target deck
     std::cout << "[Deck Switch] Target deck:" << target << std:: endl;
@@ -95,9 +100,10 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
 
     this->active_deck = target;
     std::cout << "[Active Deck] Switched to deck " << target << std::endl;
-        
-    return target;
+    return target; 
     }
+    
+    return 0;
 }
 
 

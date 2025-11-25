@@ -18,18 +18,20 @@ int DJControllerService::loadTrackToCache(AudioTrack& track) {
     return 1;
 
     }
-        AudioTrack* copy=track.clone().release();
-        if(!copy) {
-            std::cout <<"[ERROR] Track:" <<track.get_title() << "failed to clone" <<std::endl;
-            return ERROR_CLONE;
-        }
+    AudioTrack* copy=track.clone().release();
+    if(!copy) {
+        std::cout <<"[ERROR] Track:" <<track.get_title() << "failed to clone" <<std::endl;
+        return ERROR_CLONE;
+    }
 
-        copy->load();
-        copy->analyze_beatgrid();
+    copy->load();
+    copy->analyze_beatgrid();
 
-        if(this->cache.put(PointerWrapper<AudioTrack> (copy)))
-            return -1;
+   if(this->cache.put(PointerWrapper<AudioTrack> (copy)))
+        return -1;
+        
     return 0;
+
 }
 
 void DJControllerService::set_cache_size(size_t new_size) {
