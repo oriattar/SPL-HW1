@@ -12,7 +12,7 @@
  * Constructor
  */
 MixingEngineService::MixingEngineService()
-    : active_deck(0), auto_sync(false), bpm_tolerance(0)
+     : decks(), active_deck(1), auto_sync(false), bpm_tolerance(0)
 {
     this->decks[FIRST_DECK]= nullptr; // sets bouth decks to nullptr as the inital state.
     this->decks[SECOND_DECK]= nullptr; 
