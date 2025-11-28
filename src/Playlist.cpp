@@ -32,7 +32,6 @@ void Playlist::Clear()
         delete current->track;
         delete current;
         current=next;
-        this->head = nullptr;
     }
 }
 /*
@@ -76,6 +75,7 @@ void Playlist::remove_track(const std::string& title) {
         } else {
             head = current->next;
         }
+        delete current->track;
         delete current; // deleting the node we removed
 
         track_count--;
