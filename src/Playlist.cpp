@@ -29,8 +29,10 @@ void Playlist::Clear()
     PlaylistNode* current=this->head;
     while(current) { //going over each track and deleting it
         PlaylistNode* next=current->next;
+        delete current->track;
         delete current;
         current=next;
+        this->head = nullptr;
     }
 }
 /*

@@ -192,16 +192,7 @@ void DJSession::process_selected_playlist(const std::string& playlist_name) {
                  this->load_track_to_mixer_deck(track_titles[i]);
             }
             this->print_session_summary();
-            this->stats.cache_evictions=0;
-            this->stats.cache_hits=0;
-            this->stats.cache_misses=0;
-            this->stats.deck_loads_a=0;
-            this->stats.deck_loads_b=0;
-            this->stats.errors=0;
-            this->stats.tracks_processed=0;
-            this->stats.transitions=0;
-}
-
+        }
 /* 
  * Helper method to load session configuration from file
  * 

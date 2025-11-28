@@ -2,8 +2,8 @@
 #include <iostream>
 #include <memory>
 
-#define FIRST_DECK 0
-#define SECOND_DECK 1
+#define FIRST_DECK 1
+#define SECOND_DECK 0
 
 #define ERROR_CLONE -1
 
