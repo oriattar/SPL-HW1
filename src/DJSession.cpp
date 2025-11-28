@@ -189,7 +189,9 @@ void DJSession::process_selected_playlist(const std::string& playlist_name) {
                  std::cout << " Log: \n-- Processing: "<< track_titles[i] << " -- " << std::endl;
                  this->stats.tracks_processed++;
                  this->load_track_to_controller(track_titles[i]);
+                 this->controller_service.displayCacheStatus();
                  this->load_track_to_mixer_deck(track_titles[i]);
+                 this->mixing_service.displayDeckStatus();
             }
             this->print_session_summary();
         }
