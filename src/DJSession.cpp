@@ -154,7 +154,7 @@ void DJSession::simulate_dj_performance() {
     std::cout << "Cache Capacity: " << session_config.controller_cache_size << " slots (LRU policy)" << std::endl;
     std::cout << "\n--- Processing Tracks ---" << std::endl;
 
-    std::cout << "TODO: Implement the DJ performance simulation workflow here." << std::endl;
+    
     // Your implementation here
     if(this->play_all) {
        std::map<std::string,std::vector<int>> playlists=this->session_config.playlists;
@@ -186,7 +186,7 @@ void DJSession::process_selected_playlist(const std::string& playlist_name) {
             }
             std::vector<std::string> track_titles=this->library_service.getTrackTitles();
             for(int i=0; i<track_titles.size(); i++) {
-                 std::cout << " Log: \n-- Processing: "<< track_titles[i] << " -- " << std::endl;
+                 std::cout << "-- Processing: "<< track_titles[i] << " -- " << std::endl;
                  this->stats.tracks_processed++;
                  this->load_track_to_controller(track_titles[i]);
                  this->controller_service.displayCacheStatus();

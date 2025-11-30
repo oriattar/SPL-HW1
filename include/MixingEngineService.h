@@ -18,6 +18,7 @@ private:
 public:
     MixingEngineService();
     ~MixingEngineService();
+    void ClearDeck (int i);
 
     /** Contract: Load a track to the next deck per instant-transition policy
      * - @param track: reference to a cached track to be cloned for the mixer

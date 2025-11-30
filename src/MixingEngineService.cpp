@@ -62,11 +62,12 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
         this->active_deck=0;
 
          std::cout << "[Load Complete] "<< track.get_title() <<" is now loaded on deck " << 0 << std::endl;
+         std::cout << "[Active Deck] Switched to deck " << 0 << std::endl;
     }
      else {
 
     int target = 1- this->active_deck; //calculates target deck
-    std::cout << "[Deck Switch] Target deck:" << target << std:: endl;
+    std::cout << "[Deck Switch] Target deck: " << target << std:: endl;
 
     AudioTrack * curr =decks[target];
     if(curr)

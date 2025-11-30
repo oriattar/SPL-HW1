@@ -45,7 +45,7 @@ void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>&
 
     }
 
-    std::cout << "Log summary: [INFO] Track library built: "<<this->library.size() << " tracks loaded" << std::endl;
+    std::cout << "[INFO] Track library built: "<<this->library.size() << " tracks loaded" << std::endl;
 }
 
 /**
@@ -94,7 +94,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
     this->playlist = Playlist(playlist_name);
 
     int count_track=0;
-    std::cout << "Log: [INFO] Loading playlist: " << playlist_name <<std::endl;
+    std::cout << "[INFO] Loading playlist: " << playlist_name <<std::endl;
 
     for(int i=0; i < track_indices.size(); i++){
         int currIndex = track_indices[i];
@@ -108,7 +108,6 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
                 copy->analyze_beatgrid(); //simulates data vis
                 count_track++;
                 this->playlist.add_track(copy);
-                std::cout << "Log: Added "<< copy->get_title() <<" to playlist "<< playlist_name << std::endl;
 
             }
             else
