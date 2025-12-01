@@ -88,13 +88,14 @@ AudioTrack* DJLibraryService::findTrack(const std::string& track_title) {
 void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name, 
                                                const std::vector<int>& track_indices) {
     
+    std::cout << "[INFO] Loading playlist: " << playlist_name <<std::endl;
     if(!this->playlist.is_empty())
         this->playlist.Clear(); // cleaning prevoiusly allocated tracks
-
+                                        
     this->playlist = Playlist(playlist_name);
 
     int count_track=0;
-    std::cout << "[INFO] Loading playlist: " << playlist_name <<std::endl;
+    
 
     for(int i=0; i < track_indices.size(); i++){
         int currIndex = track_indices[i];
@@ -120,7 +121,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
             std::cout << "[WARNING] Invalid track index: "<< currIndex << std::endl;
         }
     }
-     std::cout << "Log summary: [INFO] Playlist loaded: "<< playlist_name << " (" << count_track << "  tracks) " << std::endl;
+     std::cout << "[INFO] Playlist loaded: "<< playlist_name << " (" << count_track << " tracks)" << std::endl;
 }
 /**
  * Method that collects the titles of the playlist field.

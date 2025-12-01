@@ -79,7 +79,7 @@ int DJSession::load_track_to_controller(const std::string& track_name) {
          this->stats.errors++;
          return 0;
     }
-    std::cout << "[System] Loading track " << track_name << " to controller... " << std::endl;
+    std::cout << "[System] Loading track '" << track_name << "' to controller..." << std::endl;
     int res=this->controller_service.loadTrackToCache(*track);
     if(res==1)
         this->stats.cache_hits++;
@@ -174,7 +174,7 @@ void DJSession::simulate_dj_performance() {
                 this->process_selected_playlist(name); 
         }while(name!= "");       
     }
-    std::cout << "Log: Session cancelled by user or all playlists played." << std::endl;
+    std::cout << "Session cancelled by user or all playlists played." << std::endl;
 }
 /*
 Helper method that process selected playlist
@@ -185,8 +185,10 @@ void DJSession::process_selected_playlist(const std::string& playlist_name) {
                 return;
             }
             std::vector<std::string> track_titles=this->library_service.getTrackTitles();
+            
+            std::reverse(track_titles.begin(),track_titles.end());
             for(int i=0; i<track_titles.size(); i++) {
-                 std::cout << "-- Processing: "<< track_titles[i] << " -- " << std::endl;
+                 std::cout << "\n--- Processing: "<< track_titles[i] << " ---" << std::endl;
                  this->stats.tracks_processed++;
                  this->load_track_to_controller(track_titles[i]);
                  this->controller_service.displayCacheStatus();

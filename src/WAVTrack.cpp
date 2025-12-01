@@ -17,7 +17,7 @@ void WAVTrack::load() {
     // TODO: Implement realistic WAV loading simulation
     // NOTE: Use exactly 2 spaces before the arrow (→) character
 
-    std::cout << "[WAVTrack::load] Loading WAV: " << title << " at " << 
+    std::cout << "[WAVTrack::load] Loading WAV: \"" << title << "\" at " << 
     sample_rate << "Hz/" << bit_depth <<"bit (uncompressed)..." <<std::endl;
 
     long size = duration_seconds *sample_rate *(bit_depth/8) *2;
