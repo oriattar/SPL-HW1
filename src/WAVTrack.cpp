@@ -49,7 +49,7 @@ double WAVTrack::get_quality_score() const {
     if(bit_depth >=16)
         score+=10;
     if(bit_depth >=24)
-        score+=15;
+        score+=5;
 
     if(score >100)
         score = 100;
