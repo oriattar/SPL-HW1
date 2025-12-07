@@ -17,6 +17,8 @@ private:
     int bpm_tolerance;
 public:
     MixingEngineService();
+    MixingEngineService(const MixingEngineService& other) = delete;
+    MixingEngineService& operator=(const MixingEngineService& other) = delete;
     ~MixingEngineService();
     void ClearDeck (int i);
 
